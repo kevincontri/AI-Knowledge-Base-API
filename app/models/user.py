@@ -9,4 +9,3 @@ User = Table(
     Column("username", String),
     Column("created_at", DateTime, default=datetime.utcnow),    
 )
-print("USER MODEL LOADED")

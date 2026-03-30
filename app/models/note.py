@@ -11,5 +11,3 @@ Note = Table(
     Column("user_id", Integer, ForeignKey("users.id")),
     Column("created_at", DateTime, default=datetime.utcnow)
 )
-
-print("NOTE MODEL LOADED")
