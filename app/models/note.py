@@ -1,14 +1,15 @@
-from app.database.database import Base
-from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime
 from datetime import datetime
+from app.database.base import metadata
 
-class Note(Base):
-    __tablename__ = "notes"
-    id = Column(Integer, primary_key=True)
-    title = Column(String)
-    content = Column(String)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    user = relationship("User", back_populates="notes")
+Note = Table(
+    "notes",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("title", String),
+    Column("content", String),
+    Column("user_id", Integer, ForeignKey("users.id")),
+    Column("created_at", DateTime, default=datetime.utcnow)
+)
+
+print("NOTE MODEL LOADED")

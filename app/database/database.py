@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
-from sqlalchemy.orm import sessionmaker, DeclarativeBase
+from sqlalchemy.orm import sessionmaker
 from typing import Optional
+from .base import metadata
+import asyncio
 
-class Base(DeclarativeBase):
-    pass
-    
+
 CONNECTION = "sqlite+aiosqlite:///database.db"
 
 engine = create_async_engine(
@@ -34,12 +34,11 @@ class Database:
         await self.session.close()
         
 async def init_db():
-    import app.models.user
-    import app.models.note
+    from app.models import user,note
     
     async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-
+        await conn.run_sync(metadata.create_all)
+        print(metadata.tables.keys())        
+        
 if __name__ == "__main__":
-    import asyncio
     asyncio.run(init_db())

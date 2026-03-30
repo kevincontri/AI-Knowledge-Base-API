@@ -1,12 +1,12 @@
-from app.database.database import Base
-from sqlalchemy import Column, Integer, String, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime
 from datetime import datetime
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True)
-    username = Column(String)
-    created_at = Column(DateTime, default=datetime.utcnow)
-    
-    notes = relationship("Note", back_populates="user")
+from app.database.base import metadata
 
+User = Table(
+    "users",
+    metadata,
+    Column("id", Integer, primary_key=True),
+    Column("username", String),
+    Column("created_at", DateTime, default=datetime.utcnow),    
+)
+print("USER MODEL LOADED")
