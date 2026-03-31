@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class NoteRepositoryInterface(ABC):
+class NoteServiceInterface(ABC):
     @abstractmethod
     async def create_note(self, title: str, content: str, user_id: int):
         pass

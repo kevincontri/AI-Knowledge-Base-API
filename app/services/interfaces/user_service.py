@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 
 
-class UserRepositoryInterface(ABC):
-
+class UserServiceInterface(ABC):
     @abstractmethod
     async def create_user(self, username: str):
         pass

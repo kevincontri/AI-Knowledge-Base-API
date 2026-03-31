@@ -9,5 +9,5 @@ Note = Table(
     Column("title", String),
     Column("content", String),
     Column("user_id", Integer, ForeignKey("users.id")),
-    Column("created_at", DateTime, default=datetime.utcnow)
+    Column("created_at", DateTime, default=datetime.utcnow),
 )
