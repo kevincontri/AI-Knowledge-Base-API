@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey, DateTime
+from sqlalchemy import Table, Column, Integer, String, ForeignKey
 from datetime import datetime
 from app.database.base import metadata
 
@@ -9,5 +9,5 @@ Note = Table(
     Column("title", String),
     Column("content", String),
     Column("user_id", Integer, ForeignKey("users.id")),
-    Column("created_at", DateTime, default=datetime.utcnow),
+    Column("created_at", String, default=str(datetime.now().isoformat()))
 )

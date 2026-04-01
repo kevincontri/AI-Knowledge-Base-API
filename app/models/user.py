@@ -7,5 +7,5 @@ User = Table(
     metadata,
     Column("id", Integer, primary_key=True),
     Column("username", String),
-    Column("created_at", DateTime, default=datetime.utcnow),
+    Column("created_at", String, default=str(datetime.now().isoformat()))
 )

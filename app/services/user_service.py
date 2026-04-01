@@ -1,5 +1,4 @@
 from .interfaces.user_service import UserServiceInterface
-from app.repositories.user_repository import UserRepository
 from app.repositories.interfaces.user_repository import UserRepositoryInterface
 
 
@@ -42,10 +41,3 @@ class UserService(UserServiceInterface):
 
     async def __isduplicate(self, username: str):
         return bool(await self.repo.get_user_by_name(username))
-
-    # TODO format functions should be in controller
-    def __format_single_user(self, user_id: int, username: str, created_at: str):
-        return {"user": {"id": user_id, "username": username, "created_at": created_at}}
-
-    def __format_multiple_users(self, users: list):
-        return {"count": len(users), "users": users}

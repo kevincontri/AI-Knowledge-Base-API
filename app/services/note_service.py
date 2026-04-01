@@ -61,19 +61,4 @@ class NoteService(NoteServiceInterface):
 
         return True
 
-    # TODO format functions should be in controller
-    def __format_single_note(
-        self, note_id: int, title: str, content: str, user_id: int, created_at: str
-    ):
-        return {
-            "note_info": {
-                "id": note_id,
-                "title": title,
-                "content": content,
-                "user_id": user_id,
-                "created_at": created_at,
-            }
-        }
 
-    def __format_multiple_notes(self, notes: list):
-        return {"count": len(notes), "notes": notes}
