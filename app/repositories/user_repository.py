@@ -36,7 +36,7 @@ class UserRepository(UserRepositoryInterface):
 
     async def get_user_by_name(self, username: str):
         async with Database() as db:
-            query = select(User).where(User.c.username == username)
+            query = select(User).where(User.c.username == username).limit(1)
 
             result = await db.session.execute(query)
             user = result.one_or_none()

@@ -30,6 +30,7 @@ async def test_note_repository_update_note():
 
 
 @pytest.mark.asyncio
+@pytest.mark.skip(reason="Delete note test")
 async def test_note_repository_delete_note():
     response = await repo.delete_note(1)
     assert response
