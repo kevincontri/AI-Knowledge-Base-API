@@ -1,69 +1,41 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends, Path
 from app.schemas.user_schemas import *
-from app.services.user_service import UserService
-from app.repositories.user_repository import UserRepository
-from fastapi.responses import JSONResponse
-from app.controllers.json_output import *
+from app.controllers.dependencies import *
+from app.exceptions.exceptions import *
 
 user_router = APIRouter(
     prefix="/users",
     tags=["users"]
 )
 
-user_service = UserService(UserRepository())
-
-@user_router.post("/")
-async def create_user(body: UserCreate):
+@user_router.post("", status_code=201)
+async def create_user(body: UserCreate, user_service: UserService = Depends(get_user_service)):
     try:
         user = await user_service.create_user(body.username)
-    except Exception as e:
+    except DuplicateError as e:
         raise HTTPException(
             status_code=400, 
             detail=str(e)
         )
-        
-    user_formatted = format_single_user(user)
-    
-    if not user_formatted:
-        raise HTTPException(
-            status_code=400, 
-            detail="User not created"
-            )
-        
-    return JSONResponse(
-        content=user_formatted,
-        status_code=201
-    )
+    return SingleUserResponse(user=user)
 
-@user_router.get("/")
-async def get_all_users():
+@user_router.get("", status_code=200)
+async def get_all_users(user_service: UserService = Depends(get_user_service)):
     users = await user_service.get_all_users()
-    users_formatted = format_multiple_users(users)
-    
-    return JSONResponse(
-        content=users_formatted,
-        status_code=200
-    )
+    return MultipleUserResponse(count=len(users), users=users)
 
-@user_router.get("/{user_id}")
-async def get_user_by_id(user_id: int):
+
+@user_router.get("/{user_id}", status_code=200)
+async def get_user_by_id(
+    user_id: int = Path(..., gt=0), 
+    user_service: UserService = Depends(get_user_service)
+    ):
     try:
         user = await user_service.get_user_by_id(user_id)
-    except Exception as e:
+    except NotFoundError as e:
         raise HTTPException(
-            status_code=400,
+            status_code=404,
             detail=str(e)
         )
-        
-    if not user:
-        raise HTTPException(
-            status_code=404, 
-            detail="User not found"
-        )
-        
-    user_formatted = format_single_user(user)
-    
-    return JSONResponse(
-        content=user_formatted,
-        status_code=200
-    )
+    return SingleUserResponse(user=user)
+

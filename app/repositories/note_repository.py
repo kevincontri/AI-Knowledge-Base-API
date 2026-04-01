@@ -8,10 +8,12 @@ from typing import Optional
 class NoteRepository(NoteRepositoryInterface):
     async def create_note(self, title: str, content: str, user_id: int):
         async with Database() as db:
-            query = insert(Note).values(title=title, content=content, user_id=user_id)
-            await db.session.execute(query)
+            query = insert(Note).values(title=title, content=content, user_id=user_id).returning(Note)
+            result = await db.session.execute(query)
             await db.session.commit()
-            return True
+            
+            inserted_note = result.fetchone()
+            return dict(inserted_note._mapping)
 
         return False
 

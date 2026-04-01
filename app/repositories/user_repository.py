@@ -8,10 +8,11 @@ class UserRepository(UserRepositoryInterface):
 
     async def create_user(self, username: str):
         async with Database() as db:
-            query = insert(User).values(username=username)
-            await db.session.execute(query)
+            query = insert(User).values(username=username).returning(User)
+            result = await db.session.execute(query)
             await db.session.commit()
-            return await self.get_user_by_name(username)
+            inserted_user = result.fetchone()
+            return dict(inserted_user._mapping)
 
         return False
 
