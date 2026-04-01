@@ -22,7 +22,7 @@ async def create_user(body: UserCreate):
             detail=str(e)
         )
         
-    user_formatted = format_single_user(user["id"], user["username"], user["created_at"])
+    user_formatted = format_single_user(user)
     
     if not user_formatted:
         raise HTTPException(
@@ -61,7 +61,7 @@ async def get_user_by_id(user_id: int):
             detail="User not found"
         )
         
-    user_formatted = format_single_user(user["id"], user["username"], user["created_at"])
+    user_formatted = format_single_user(user)
     
     return JSONResponse(
         content=user_formatted,

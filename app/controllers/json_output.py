@@ -1,28 +1,28 @@
 def format_single_note(
-    note_id: int, title: str, content: str, user_id: int, created_at: str
+    note: dict
 ):
     return {
         "note_info": {
-            "id": note_id,
-            "title": title,
-            "content": content,
-            "user_id": user_id,
-            "created_at": created_at,
+            "id": note.get("id"),
+            "title": note.get("title"),
+            "content": note.get("content"),
+            "user_id": note.get("user_id"),
+            "created_at": note.get("created_at"),
         }
     }
     
-def format_multiple_notes(self, notes: list):
+def format_multiple_notes(notes: list):
     return {
         "count": len(notes), 
         "notes": notes
         }
     
-def format_single_user(user_id: int, username: str, created_at: str):
+def format_single_user(user: dict):
     return {
         "user": {
-            "id": user_id, 
-            "username": username, 
-            "created_at": created_at}
+            "id": user.get("id"), 
+            "username": user.get("username"), 
+            "created_at": user.get("created_at")}
         }
 
 def format_multiple_users(users: list):
