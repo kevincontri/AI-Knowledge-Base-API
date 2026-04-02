@@ -39,7 +39,6 @@ async def init_db():
 
     async with engine.begin() as conn:
         await conn.run_sync(metadata.create_all)
-        print(metadata.tables.keys())
 
 
 if __name__ == "__main__":

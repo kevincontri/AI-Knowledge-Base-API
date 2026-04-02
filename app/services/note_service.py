@@ -3,6 +3,7 @@ from .user_service import UserService
 from app.repositories.interfaces.note_repository import NoteRepositoryInterface
 from app.exceptions.exceptions import *
 
+
 class NoteService(NoteServiceInterface):
 
     def __init__(self, repo: NoteRepositoryInterface, user_service: UserService):
@@ -15,26 +16,26 @@ class NoteService(NoteServiceInterface):
 
         return await self.repo.create_note(title, content, user_id)
 
-    async def get_note_by_id(self, note_id: int):
-        note_info = await self.repo.get_note_by_id(note_id)
+    async def get_note_from_user(self, note_id: int, user_id: int):
+        note_info = await self.repo.get_note_from_user(note_id, user_id)
 
         if not note_info:
             raise NotFoundError("Note not found")
 
         return note_info
 
-    async def get_all_notes(self):
-        notes = await self.repo.get_all_notes()
+    async def get_all_notes_from_user(self, user_id: int):
+        notes = await self.repo.get_all_notes_from_user(user_id)
         return notes
 
-    async def update_note(self, note_id: int, title: str = None, content: str = None):
-        await self.get_note_by_id(note_id)
-        note = await self.repo.update_note(note_id, title, content)
+    async def update_note_from_user(
+        self, note_id: int, user_id: int, title: str = None, content: str = None
+    ):
+        note = await self.repo.update_note_from_user(note_id, user_id, title, content)
+        if not note:
+            raise NotFoundError("Note not found")
         return note
 
-    async def delete_note(self, note_id: int):
-        await self.get_note_by_id(note_id)
-        await self.repo.delete_note(note_id)
-
-
-
+    async def delete_note_from_user(self, note_id: int, user_id: int):
+        if not await self.repo.delete_note_from_user(note_id, user_id):
+            raise NotFoundError("Note not found")

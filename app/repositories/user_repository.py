@@ -6,9 +6,13 @@ from app.models.user import User
 
 class UserRepository(UserRepositoryInterface):
 
-    async def create_user(self, username: str):
+    async def create_user(self, username: str, password: str):
         async with Database() as db:
-            query = insert(User).values(username=username).returning(User)
+            query = (
+                insert(User)
+                .values(username=username, password_hash=password)
+                .returning(User)
+            )
             result = await db.session.execute(query)
             await db.session.commit()
             inserted_user = result.fetchone()

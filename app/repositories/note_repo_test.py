@@ -12,25 +12,27 @@ async def test_note_repository_create_note():
 
 @pytest.mark.asyncio
 async def test_note_repository_get_note_by_id():
-    response = await repo.get_note_by_id(1)
+    response = await repo.get_note_from_user(1)
     assert response
     print("Note:", response)
 
 
 @pytest.mark.asyncio
 async def test_note_repository_get_all_notes():
-    response = await repo.get_all_notes()
+    response = await repo.get_all_notes_from_user()
     assert response
 
 
 @pytest.mark.asyncio
 async def test_note_repository_update_note():
-    response = await repo.update_note(1, "Title Test Update", "Content Test Update")
+    response = await repo.update_note_from_user(
+        1, "Title Test Update", "Content Test Update"
+    )
     assert response
 
 
 @pytest.mark.asyncio
 @pytest.mark.skip(reason="Delete note test")
 async def test_note_repository_delete_note():
-    response = await repo.delete_note(1)
+    response = await repo.delete_note_from_user(1)
     assert response
