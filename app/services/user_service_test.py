@@ -4,7 +4,7 @@ from .user_service import UserService
 
 class UserRepositoryMock:
 
-    async def create_user(self, username: str):
+    async def create_user(self, username: str, password: str):
         return {
             "id": 1,
             "username": "Test User",
@@ -40,7 +40,7 @@ user_service = UserService(repo)
 
 @pytest.mark.asyncio
 async def test_create_user():
-    response = await user_service.create_user("New User")
+    response = await user_service.create_user("New User", "password")
     assert response
 
 

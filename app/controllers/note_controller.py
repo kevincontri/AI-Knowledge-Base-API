@@ -26,7 +26,10 @@ async def get_all_notes_from_user(
     current_user_id=Depends(get_current_user),
 ):
     notes = await note_service.get_all_notes_from_user(current_user_id)
-    return MultipleNoteResponse(count=len(notes), notes=notes)
+    if notes:
+        return MultipleNoteResponse(count=len(notes), notes=notes)
+    else:
+        return MultipleNoteResponse(count=0, notes=[])
 
 
 @note_router.get("/{note_id}", status_code=200, response_model=SingleNoteResponse)
