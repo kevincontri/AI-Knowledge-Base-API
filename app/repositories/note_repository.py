@@ -62,3 +62,10 @@ class NoteRepository(NoteRepositoryInterface):
             return True
 
         return None
+    
+    async def get_user_notes(self, user_id: int):
+        async with Database() as db:
+            query = select(Note).where(Note.c.user_id == user_id)
+            result = await db.session.execute(query)
+            rows = result.fetchall()
+            return [dict(row._mapping) for row in rows]
