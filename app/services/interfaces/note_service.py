@@ -7,17 +7,19 @@ class NoteServiceInterface(ABC):
         pass
 
     @abstractmethod
-    async def get_note_by_id(self, note_id: int):
+    async def get_note_from_user(self, note_id: int, user_id: int):
         pass
 
     @abstractmethod
-    async def get_all_notes(self):
+    async def get_all_notes_from_user(self, user_id: int):
         pass
 
     @abstractmethod
-    async def update_note(self, note_id: int, title: str = None, content: str = None):
+    async def update_note_from_user(
+        self, note_id: int, user_id: int, title: str = None, content: str = None
+    ):
         pass
 
     @abstractmethod
-    async def delete_note(self, note_id: int):
+    async def delete_note_from_user(self, note_id: int, user_id: int):
         pass

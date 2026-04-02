@@ -5,6 +5,7 @@ from app.repositories.user_repository import UserRepository
 from app.repositories.note_repository import NoteRepository
 from app.services.ai_service import AIService
 
+
 def get_user_repository():
     return UserRepository()
 
@@ -23,5 +24,9 @@ def get_note_service(
 ):
     return NoteService(note_repo, user_service)
 
-def get_aiservice(note_repo: NoteRepository = Depends(get_note_repository), user_repo: UserRepository = Depends(get_user_repository)):
+
+def get_aiservice(
+    note_repo: NoteRepository = Depends(get_note_repository),
+    user_repo: UserRepository = Depends(get_user_repository),
+):
     return AIService(note_repo, user_repo)
