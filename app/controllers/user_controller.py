@@ -5,7 +5,6 @@ from app.exceptions.exceptions import *
 
 user_router = APIRouter(prefix="/users", tags=["users"])
 
-
 @user_router.get("", status_code=200)
 async def get_all_users(user_service: UserService = Depends(get_user_service)):
     users = await user_service.get_all_users()

@@ -1,14 +1,18 @@
 from fastapi.testclient import TestClient
 from app.server.server import app
-import pytest
+from app.core.auth import get_current_user
+
+def override_get_current_user():
+    return 1
+
+app.dependency_overrides[get_current_user] = override_get_current_user
 
 client = TestClient(app)
-
 
 def test_create_note():
     response = client.post(
         "/notes",
-        json={"title": "Test Note", "content": "This is a test note.", "user_id": 1},
+        json={"title": "Test Note", "content": "This is a test note."},
     )
     assert response.status_code == 201
     data = response.json()
@@ -16,9 +20,9 @@ def test_create_note():
     assert data["note"]["title"] == "Test Note"
     assert data["note"]["content"] == "This is a test note."
     assert "created_at" in data["note"]
-    __delete_note_from_db(data["note"]["id"])
-
-
+    response = client.delete(f"/notes/{data['note']['id']}")
+    assert response.status_code == 204
+    
 def test_get_all_notes():
     response = client.get("/notes")
     assert response.status_code == 200
@@ -31,19 +35,18 @@ def test_get_all_notes():
         assert "title" in note
         assert "content" in note
 
-
 def test_get_note_by_id():
-    response = client.get("/notes/2")
+    response = client.get("/notes/1")
     assert response.status_code == 200
     data = response.json()
     assert "id" in data["note"]
     assert "title" in data["note"]
     assert "content" in data["note"]
 
-
 def test_update_note():
+    response = client.post("/notes", json={"title": "Note for update", "content": "This note will be updated."})
     response = client.put(
-        "/notes/1",
+        f"/notes/{response.json()['note']['id']}",
         json={
             "title": "Updated Note",
             "content": "This is an updated note from a TestClient.",
@@ -55,16 +58,13 @@ def test_update_note():
     assert data["note"]["title"] == "Updated Note"
     assert data["note"]["content"] == "This is an updated note from a TestClient."
     assert "created_at" in data["note"]
-
-
-@pytest.mark.skip(reason="Delete note test")
-def test_delete_note():
-    response = client.delete("/notes/1")
+    response = client.delete(f"/notes/{data['note']['id']}")
     assert response.status_code == 204
 
-    response = client.get("/notes/1")
+def test_delete_note():
+    response = client.post("/notes", json={"title": "Note for deletetion", "content": "This note will be deleted."})
+    note_id = response.json()["note"]["id"]
+    response = client.delete(f"/notes/{note_id}")
+    assert response.status_code == 204
+    response = client.get(f"/notes/{note_id}")
     assert response.status_code == 404
-
-
-def __delete_note_from_db(note_id: int):
-    client.delete(f"/notes/{note_id}")

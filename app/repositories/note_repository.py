@@ -6,11 +6,11 @@ from typing import Optional
 
 
 class NoteRepository(NoteRepositoryInterface):
-    async def create_note(self, title: str, content: str, user_id: int):
+    async def create_note(self, title: str, content: str, user_id: int, embeddings: list):
         async with Database() as db:
             query = (
                 insert(Note)
-                .values(title=title, content=content, user_id=user_id)
+                .values(title=title, content=content, user_id=user_id, embedding=embeddings)
                 .returning(Note)
             )
             result = await db.session.execute(query)
@@ -46,6 +46,7 @@ class NoteRepository(NoteRepositoryInterface):
         self,
         note_id: int,
         user_id: int,
+        embeddings: list,
         title: Optional[str] = None,
         content: Optional[str] = None,
     ):
@@ -57,7 +58,8 @@ class NoteRepository(NoteRepositoryInterface):
                 values["title"] = title
             if content is not None:
                 values["content"] = content
-
+            values["embedding"] = embeddings
+            
             async with Database() as db:
                 query = (
                     update(Note)
@@ -86,7 +88,7 @@ class NoteRepository(NoteRepositoryInterface):
 
     async def get_user_notes(self, user_id: int):
         async with Database() as db:
-            query = select(Note).where(Note.c.user_id == user_id)
+            query = select(Note).where(Note.c.user_id == user_id)            
             result = await db.session.execute(query)
             rows = result.fetchall()
             return [dict(row._mapping) for row in rows]

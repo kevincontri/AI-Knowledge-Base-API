@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, ForeignKey, JSON
 from datetime import datetime
 from app.database.base import metadata
 
@@ -9,5 +9,6 @@ Note = Table(
     Column("title", String),
     Column("content", String),
     Column("user_id", Integer, ForeignKey("users.id")),
-    Column("created_at", String, default=str(datetime.now().isoformat())),
+    Column("embedding", JSON),
+    Column("created_at", String, default=lambda: datetime.now().isoformat()),
 )
