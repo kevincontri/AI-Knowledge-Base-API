@@ -5,9 +5,10 @@ repo = NoteRepository()
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="Create note test")
 async def test_create_note():
-    response = await repo.create_note("Title Test", "Content Test", 1, ["Test Embedding"])
+    response = await repo.create_note(
+        "Title Test", "Content Test", 1, ["Test Embedding"]
+    )
     assert response
     deleted = await repo.delete_note_from_user(response["id"], 1)
     assert deleted
@@ -16,37 +17,47 @@ async def test_create_note():
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="Get note test")
 async def test_get_note_from_user():
-    create_response = await repo.create_note("Title Test", "Content Test", 1, ["Test Embedding"])
+    create_response = await repo.create_note(
+        "Title Test", "Content Test", 1, ["Test Embedding"]
+    )
     note_response = await repo.get_note_from_user(create_response["id"], 1)
     assert note_response
     deleted = await repo.delete_note_from_user(create_response["id"], 1)
     assert deleted
-    note = await repo.get_note_from_user(note_response["id"], 1)
+    note = await repo.get_note_from_user(create_response["id"], 1)
     assert not note
 
 
-# TODO: Finish tests
-
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="Get all notes test")
 async def test_note_repository_get_all_notes():
-    response = await repo.get_all_notes_from_user()
+    response = await repo.get_all_notes_from_user(1)
     assert response
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="Update note test")
 async def test_note_repository_update_note():
+    note_created = await repo.create_note(
+        "Title Test", "Content Test", 1, ["Test Embedding"]
+    )
     response = await repo.update_note_from_user(
-        1, "Title Test Update", "Content Test Update"
+        note_created["id"],
+        1,
+        ["Test Embedding"],
+        "Title Test Update",
+        "Content Test Update",
     )
     assert response
+    deleted = await repo.delete_note_from_user(note_created["id"], 1)
+    assert deleted
+    note = await repo.get_note_from_user(note_created["id"], 1)
+    assert not note
 
 
 @pytest.mark.asyncio
-@pytest.mark.skip(reason="Delete note test")
 async def test_note_repository_delete_note():
-    response = await repo.delete_note_from_user(1)
+    note_created = await repo.create_note(
+        "Title Test", "Content Test", 1, ["Test Embedding"]
+    )
+    response = await repo.delete_note_from_user(note_created["id"], 1)
     assert response
