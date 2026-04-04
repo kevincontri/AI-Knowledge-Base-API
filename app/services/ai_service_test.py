@@ -1,9 +1,8 @@
 import pytest
-from .note_service import NoteService
+from .ai_service import AIService
 
 
 class NoteRepositoryMock:
-
     async def create_note(
         self, title: str, content: str, user_id: int, embeddings: list
     ):
@@ -55,45 +54,52 @@ class NoteRepositoryMock:
     async def delete_note_from_user(self, note_id: int, user_id: int):
         return True
 
+    async def get_user_notes(self, user_id: int):
+        return [
+            {
+                "id": 1,
+                "title": "Title Test",
+                "content": "Content Test",
+                "user_id": user_id,
+                "created_at": "2023-01-01",
+            }
+        ]
 
-class UserServiceMock:
+
+class UserRepositoryMock:
+
+    async def create_user(self, username: str, password: str):
+        return {
+            "id": 1,
+            "username": "Test User",
+            "created_at": "2020-01-01T00:00:00.000Z",
+        }
 
     async def get_user_by_id(self, user_id: int):
-        return {"id": 1, "username": "User Test", "created_at": "2023-01-01"}
+        return {
+            "id": user_id,
+            "username": "Test User",
+            "created_at": "2020-01-01T00:00:00.000Z",
+        }
+
+    async def get_all_users(self):
+        return [
+            {"id": 1, "username": "Test User", "created_at": "2020-01-01T00:00:00.000Z"}
+        ]
+
+    async def get_user_by_name(self, username: str):
+        return {
+            "id": 1,
+            "username": "Test User",
+            "created_at": "2020-01-01T00:00:00.000Z",
+        }
 
 
-note_repo = NoteRepositoryMock()
-user_service = UserServiceMock()
-service = NoteService(note_repo, user_service)
-
-
-@pytest.mark.asyncio
-async def test_create_note():
-    response = await service.create_note("Title Test", "Content Test", 1)
-    assert response
-
-
-@pytest.mark.asyncio
-async def test_get_note_from_user():
-    response = await service.get_note_from_user(1, 1)
-    assert response
-
-
-@pytest.mark.asyncio
-async def test_get_all_notes_from_user():
-    response = await service.get_all_notes_from_user(1)
-    assert response
+ai_service = AIService(NoteRepositoryMock(), UserRepositoryMock())
 
 
 @pytest.mark.asyncio
-async def test_update_note_from_user():
-    response = await service.update_note_from_user(
-        1, 1, "Title Test Update", "Content Test Update"
-    )
-    assert response
-
-
-@pytest.mark.asyncio
-async def test_delete_note_from_user():
-    response = await service.delete_note_from_user(1, 1)
-    assert response is None
+async def test_ask():
+    result = await ai_service.ask(user_id=1, prompt="Test Prompt")
+    assert result
+    assert result.ai_response

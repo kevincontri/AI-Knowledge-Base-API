@@ -4,7 +4,7 @@ from app.controllers.dependencies import *
 from app.exceptions.exceptions import NotFoundError
 from app.core.auth import get_current_user
 
-ai_router = APIRouter(prefix="/ai", tags=["AI"])
+ai_router = APIRouter(prefix="/ai", tags=["ai"])
 
 
 @ai_router.post("/ask", status_code=200)

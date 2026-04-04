@@ -24,10 +24,12 @@ async def test_get_user_by_id():
     user = await repo.get_user_by_id(user["id"])
     assert not user
 
+
 @pytest.mark.asyncio
 async def test_get_all_users():
     response = await repo.get_all_users()
     assert response
+
 
 @pytest.mark.asyncio
 async def test_get_user_by_name():

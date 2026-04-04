@@ -48,6 +48,9 @@ async def test_create_user():
 async def test_get_user_by_id():
     response = await user_service.get_user_by_id(1)
     assert response
+    assert "id" in response
+    assert "username" in response
+    assert "created_at" in response
 
 
 @pytest.mark.asyncio

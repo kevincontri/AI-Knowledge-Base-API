@@ -16,7 +16,12 @@ class NoteServiceInterface(ABC):
 
     @abstractmethod
     async def update_note_from_user(
-        self, note_id: int, user_id: int, embeddings: list, title: str = None, content: str = None, 
+        self,
+        note_id: int,
+        user_id: int,
+        embeddings: list,
+        title: str = None,
+        content: str = None,
     ):
         pass
 

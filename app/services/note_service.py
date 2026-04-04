@@ -4,6 +4,7 @@ from app.repositories.interfaces.note_repository import NoteRepositoryInterface
 from app.exceptions.exceptions import *
 from app.ai_settings.embedding_client import EmbeddingClient
 
+
 class NoteService(NoteServiceInterface):
 
     def __init__(self, repo: NoteRepositoryInterface, user_service: UserService):
@@ -15,11 +16,11 @@ class NoteService(NoteServiceInterface):
             raise NotFoundError("User not found")
 
         embed_client = EmbeddingClient()
-        
+
         text = f"{title}. {content}"
-        
+
         embeddings = await embed_client.message_embedding(text)
-        
+
         return await self.repo.create_note(title, content, user_id, embeddings)
 
     async def get_note_from_user(self, note_id: int, user_id: int):
@@ -36,11 +37,11 @@ class NoteService(NoteServiceInterface):
 
     async def update_note_from_user(
         self, note_id: int, user_id: int, title: str = None, content: str = None
-    ):  
-        
+    ):
+
         title_to_embed = ""
         content_to_embed = ""
-        
+
         try:
             note = await self.repo.get_note_from_user(note_id, user_id)
             if not note:
@@ -49,22 +50,24 @@ class NoteService(NoteServiceInterface):
             content_to_embed += note["content"]
         except NotFoundError:
             raise NotFoundError("Note not found")
-        
+
         note_to_embed = "{}. {}"
-        
+
         if title is None:
             note_to_embed.format(title_to_embed, content)
         if content is None:
             note_to_embed.format(title, content_to_embed)
-        
+
         if title is not None and content is not None:
             note_to_embed.format(title, content)
-            
+
         embed_client = EmbeddingClient()
-        
-        embeddings = await embed_client.message_embedding(note_to_embed)     
-        
-        note = await self.repo.update_note_from_user(note_id, user_id, embeddings, title, content)
+
+        embeddings = await embed_client.message_embedding(note_to_embed)
+
+        note = await self.repo.update_note_from_user(
+            note_id, user_id, embeddings, title, content
+        )
         if not note:
             raise NotFoundError("Note not found")
         return note

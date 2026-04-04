@@ -48,7 +48,7 @@ class UserRepository(UserRepositoryInterface):
             if user:
                 return dict(user._mapping)
             return None
-        
+
     async def delete_test_user(self, user_id: int):
         async with Database() as db:
             query = delete(User).where(User.c.id == user_id)
