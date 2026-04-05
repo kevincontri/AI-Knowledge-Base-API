@@ -3,15 +3,26 @@ from sqlalchemy.orm import sessionmaker
 from typing import Optional
 from .base import metadata
 import asyncio
+import os
 
-CONNECTION = "sqlite+aiosqlite:///database.db"
+CONNECTION = os.getenv("DATABASE_URL", "sqlite+aiosqlite:///database.db")
 
-engine = create_async_engine(
-    CONNECTION,
-    pool_size=2,
-    max_overflow=0,
-    pool_timeout=30,
-)
+if CONNECTION.startswith("postgresql://"):
+    CONNECTION = CONNECTION.replace("postgresql://", "postgresql+asyncpg://", 1)
+elif CONNECTION.startswith("postgres://"):
+    CONNECTION = CONNECTION.replace("postgres://", "postgresql+asyncpg://", 1)
+
+
+engine_kwargs = {}
+
+if "asyncpg" in CONNECTION:
+    engine_kwargs = {
+        "pool_size": 2,
+        "max_overflow": 0,
+        "pool_timeout": 30,
+    }
+
+engine = create_async_engine(CONNECTION, **engine_kwargs)
 
 AsyncSessionLocal = sessionmaker(
     engine,
