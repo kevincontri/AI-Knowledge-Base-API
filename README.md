@@ -18,29 +18,34 @@ This project demonstrates backend fundamentals with an applied AI layer:
 - PostgreSQL
 - Uvicorn
 
+## AI Stack
+
+The project includes an AI stack for semantic search and local LLM answers:
+
+- `pgvector` + Embeddings (with external provider)
+- `Ollama` (local LLM for generation / QA)
+
 ## Key Dependencies
 
 - `fastapi` — web framework
 - `uvicorn` — ASGI server
 - `pydantic` — request/response validation
 - `bcrypt` — password hashing
-- `pyjwt` (or similar) — JWT tokens
-- Any client libs used for Ollama/embedding integration (see `app/ai_settings`)
-
-Refer to `requirements.txt` for exact package pins.
+- `jose` — JWT tokens
+- `httpx` — Asynchronous requests for Ollama/embedding integration.
 
 ## Project Structure
 
-- `run.py` — local run entrypoint (uses `uvicorn` to run `app.server.server:app`)
-- `app/server/server.py` — FastAPI application factory and startup lifespan (initializes DB)
+- `run.py` — local run entrypoint
+- `app/server/server.py` — FastAPI application factory
 - `app/controllers/` — route definitions and routers: `user_controller.py`, `note_controller.py`, `ai_controller.py`, `auth_controller.py`
-- `app/services/` — business logic for users, notes and AI (`*_service.py` and tests)
+- `app/services/` — business logic for users, notes and AI
 - `app/repositories/` — persistence layer for users and notes
-- `app/models/` — domain models (`user.py`, `note.py`)
+- `app/models/` — domain models
 - `app/schemas/` — Pydantic schemas for requests/responses
-- `app/database/` — database setup and helpers (`database.py`, `base.py`) — supports PostgreSQL via `DATABASE_URL` and `asyncpg`
-- `app/core/` — auth & security helpers (`auth.py`, `security.py`)
-- `app/ai_settings/` — AI integration clients and helpers (Ollama client, embedding client, prompt enhancer)
+- `app/database/` — database setup and helpers — supports PostgreSQL via `DATABASE_URL` and `asyncpg`
+- `app/core/` — auth & security helpers
+- `app/ai_settings/` — AI integration clients and helpers (Ollama client, embedding client)
 - `api_tests/` and `app/services/*_test.py` — automated tests
 
 ## Installation
