@@ -1,9 +1,14 @@
 import httpx
+import os
+import dotenv
 
+dotenv.load_dotenv()
+
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
 
 class OllamaClient:
 
-    def __init__(self, base_url: str = "http://localhost:11434"):
+    def __init__(self, base_url: str = OLLAMA_URL):
         self.endpoint = f"{base_url}/api/chat"
 
     async def generate(self, prompt: str):

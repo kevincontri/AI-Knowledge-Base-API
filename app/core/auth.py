@@ -23,7 +23,7 @@ def create_access_token(user_id: int) -> str:
     return jwt.encode(payload, SECRET_KEY, algorithm=ALGORITHM)
 
 
-def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
+def get_current_user(token: str = Depends(oauth2_scheme)) -> int:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Invalid or expired token",
@@ -34,6 +34,9 @@ def get_current_user(token: str = Depends(oauth2_scheme)) -> str:
         user_id = payload.get("sub")
         if user_id is None:
             raise credentials_exception
-        return user_id
+        try:
+            return int(user_id)
+        except (ValueError, TypeError):
+            raise credentials_exception
     except JWTError:
         raise credentials_exception

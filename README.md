@@ -2,6 +2,11 @@
 
 A backend service that provides a RESTful API for storing, searching, and querying user content (notes, articles, ideas) and augmenting them with local AI features such as embeddings and local LLM answers (via Ollama).
 
+## Prerequisites
+
+- [Docker](https://www.docker.com/products/docker-desktop) and Docker Compose (recommended)
+- Or Python 3.11+ for local development without Docker
+
 This project demonstrates backend fundamentals with an applied AI layer:
 
 - Layered architecture (controllers, services, repositories)
@@ -50,37 +55,85 @@ The project includes an AI stack for semantic search and local LLM answers:
 
 ## Installation
 
+### Option 1 — Docker
+
+Docker will set up the API, PostgreSQL, and Ollama automatically.
+
 1. Clone the repository
 
 ```
-git clone <repo-url>
+git clone https://github.com/kevincontri/AI-Knowledge-Base-API.git
+```
+
+```
 cd AI-Knowledge-Base-API
 ```
 
-2. Create and activate a virtual environment
+2. Start all services
 
-Windows (PowerShell):
+```
+docker compose up --build
+```
+
+It will:
+
+- Build and start the API on `http://localhost:8000`
+- Start a PostgreSQL instance with persistent storage
+- Start an Ollama instance on `http://localhost:11434`
+
+3. Pull the required models (first time only)
+
+```
+docker exec -it project4-ollama-1 ollama pull phi3:mini
+docker exec -it project4-ollama-1 ollama pull nomic-embed-text
+```
+
+4. Interactive docs at: `http://localhost:8000/docs`
+
+5. Usage:
+
+```
+docker compose up       # start
+docker compose down     # stop
+docker compose up --build  # after code changes
+```
+
+### Option 2 — Local development
+
+1. Clone the repository
+
+```
+git clone https://github.com/kevincontri/AI-Knowledge-Base-API.git
+```
+
+2. Create and actiave venv:
 
 ```
 python -m venv venv
-venv\Scripts\Activate.ps1
+venv\Scripts\activate
 ```
 
-3. Install dependencies
+3. Install dependencies:
 
 ```
 pip install -r requirements.txt
 ```
 
-4. Configure the database connection
+4. Configure DB connection:
 
-Set the `DATABASE_URL` environment variable to point at your PostgreSQL instance. Example (PowerShell):
+- Set the `DATABASE_URL` environment variable to point at your PostgreSQL instance.
 
 ```
 $env:DATABASE_URL = "postgresql://user:password@localhost:5432/ai_knowledge_db"
 ```
 
-The application will automatically use `asyncpg` for PostgreSQL when the URL scheme is `postgresql://` or `postgres://`.
+5. Install and start Ollama - See the [Ollama installation](#ollama-installation-local-llm) section below.
+
+6. Run the server
+
+```
+python run.py
+```
 
 ## Run the server (local development)
 
