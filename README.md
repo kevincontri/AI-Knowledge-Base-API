@@ -125,6 +125,42 @@ Note: Routes are organized in `app/controllers/`. High-level capabilities:
 
 Refer to the controller files for concrete route paths and request shapes.
 
+## Ollama installation (local LLM)
+
+This project can use Ollama as a local LLM for generation and question-answering. Below are concise installation and quick-start instructions.
+
+1. Install Ollama
+
+- macOS (Homebrew):
+
+```
+brew install ollama
+```
+
+- Linux: follow the official installer or use the distro package if available; you can also run Ollama in Docker. See the official docs for the recommended installer for your distribution.
+
+- Windows: use WSL (Windows Subsystem for Linux) and follow the Linux instructions, or use the Ollama Desktop if available for Windows. See the official docs.
+
+2. Verify installation
+
+```
+ollama --version
+```
+
+3. Pull phi3:mini model (The one used in this project)
+
+```
+ollama pull phi3:mini
+```
+
+4. Run the model locally (quick test)
+
+```
+ollama run phi3:mini --prompt "Hello, Ollama"
+```
+
+- Now Ollama is running in your machine.
+
 ## Tests
 
 There are unit tests under `api_tests/` and `app/services/*_test.py`. Run tests with your preferred test runner (e.g., `pytest`).
