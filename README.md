@@ -1,7 +1,5 @@
 # AI Knowledge Base API
 
-## Update v1.0: Initial README for AI Knowledge Base API
-
 A backend service that provides a RESTful API for storing, searching, and querying user content (notes, articles, ideas) and augmenting them with local AI features such as embeddings and local LLM answers (via Ollama).
 
 This project demonstrates backend fundamentals with an applied AI layer:
