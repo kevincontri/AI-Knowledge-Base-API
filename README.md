@@ -22,6 +22,7 @@ This project demonstrates backend fundamentals with an applied AI layer:
 - Pydantic
 - PostgreSQL
 - Uvicorn
+- Docker
 
 ## AI Stack
 
