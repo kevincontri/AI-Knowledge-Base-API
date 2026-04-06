@@ -2,9 +2,12 @@
 
 A backend service that provides a RESTful API for storing, searching, and querying user content (notes, articles, ideas) and augmenting them with local AI features such as embeddings and local LLM answers (via Ollama).
 
+### Video Demo (In Portuguese):
+https://github.com/user-attachments/assets/7b202273-4bc5-4a5f-af6c-b3ae38de1479
+
 This project demonstrates backend fundamentals with an applied AI layer:
 
-- Layered architecture (controllers, services, repositories)
+- Layered architecture (controllers, services, repositories) following the MVC pattern
 - Request validation with Pydantic
 - PostgreSQL persistence (configurable via the `DATABASE_URL` environment variable; async driver support)
 - JWT authentication and password hashing
