@@ -58,7 +58,7 @@ This project demonstrates backend fundamentals with an applied AI layer:
 
 ## Installation
 
-### Option 1 — Docker (recommended)
+### Option 1 — Using Docker
 
 Docker will set up the API, PostgreSQL, and Ollama automatically. No manual installation required.
 
