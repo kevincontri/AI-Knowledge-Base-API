@@ -2,8 +2,13 @@
 
 A backend service that provides a RESTful API for storing, searching, and querying user content (notes, articles, ideas) and augmenting them with local AI features such as embeddings and local LLM answers (via Ollama).
 
-### Video Demo (In Portuguese):
-https://github.com/user-attachments/assets/7b202273-4bc5-4a5f-af6c-b3ae38de1479
+
+<div align="center">
+  <h3>Video Demo (With text comments in Portuguese):</h3>
+  <video src="https://github.com/user-attachments/assets/7b202273-4bc5-4a5f-af6c-b3ae38de1479" width="640" controls >
+    Seu navegador não suporta vídeo.
+  </video>
+</div>
 
 This project demonstrates backend fundamentals with an applied AI layer:
 
@@ -62,7 +67,7 @@ This project demonstrates backend fundamentals with an applied AI layer:
 
 ### Option 1 — Using Docker
 
-Docker will set up the API, PostgreSQL, and Ollama automatically. No manual installation required.
+Docker will set up the API, PostgreSQL, and Ollama automatically.
 
 1. Clone the repository
 
@@ -93,7 +98,12 @@ docker exec -it ai_knowledge_base_api-ollama-1 ollama pull nomic-embed-text
 ```
 
 4. Open the interactive docs at `http://localhost:8000/docs`
-   
+
+5. Start the app:
+
+```
+docker compose up
+```
 ---
 
 ### Option 2 — Local development (without Docker)
