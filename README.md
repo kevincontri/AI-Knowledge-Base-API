@@ -30,6 +30,7 @@ This project demonstrates backend fundamentals with an applied AI layer:
 - FastAPI
 - Pydantic
 - PostgreSQL
+- SQLAlchemy
 - Uvicorn
 - Pytest
 - Docker
