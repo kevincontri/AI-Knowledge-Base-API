@@ -1,3 +1,4 @@
+name: ai_knowledge_base_api
 services:
   api:
     build: .
