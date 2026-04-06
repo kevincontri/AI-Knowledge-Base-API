@@ -11,6 +11,7 @@ This project demonstrates backend fundamentals with an applied AI layer:
 - Request validation with Pydantic
 - PostgreSQL persistence (configurable via the `DATABASE_URL` environment variable; async driver support)
 - JWT authentication and password hashing
+- Unit tests for functions of all layers and the API
 - AI integration for embeddings and semantic search
 
 ## Prerequisites
@@ -25,6 +26,7 @@ This project demonstrates backend fundamentals with an applied AI layer:
 - Pydantic
 - PostgreSQL
 - Uvicorn
+- Pytest
 - Docker
 
 ## AI Stack
@@ -86,20 +88,12 @@ This will:
 Open a new terminal and run:
 
 ```
-docker exec -it project4-ollama-1 ollama pull phi3:mini
-docker exec -it project4-ollama-1 ollama pull nomic-embed-text
+docker exec -it ai_knowledge_base_api-ollama-1 ollama pull phi3:mini
+docker exec -it ai_knowledge_base_api-ollama-1 ollama pull nomic-embed-text
 ```
 
 4. Open the interactive docs at `http://localhost:8000/docs`
-
-**Daily usage:**
-
-```
-docker compose up          # start
-docker compose down        # stop
-docker compose up --build  # after code changes
-```
-
+   
 ---
 
 ### Option 2 — Local development (without Docker)
@@ -112,9 +106,7 @@ cd AI-Knowledge-Base-API
 ```
 
 2. Create and activate a virtual environment
-
-Windows (PowerShell):
-
+   
 ```
 python -m venv venv
 venv\Scripts\Activate.ps1
@@ -163,14 +155,12 @@ The project contains `app/core/auth.py` and `app/core/security.py` for token cre
 
 ## API Highlights
 
-Routes are organized in `app/controllers/`. High-level capabilities:
+Routes are organized in `app/controllers/`:
 
-- **Users** — register and list users
-- **Auth** — login to receive JWT tokens
-- **Notes** — create, read, update, and delete personal notes associated with an author
+- **Users** — list users
+- **Auth** — register user and login to receive JWT tokens
+- **Notes** — create, read, update, and delete personal notes associated with an author (by it's user id)
 - **AI Endpoints** — semantic search using embeddings and cosine similarity; prompt enhancement and local LLM answering via Ollama
-
-Refer to the controller files for concrete route paths and request shapes.
 
 ## Tests
 
@@ -180,6 +170,6 @@ pytest -q
 
 ## Future Improvements
 
-- Add refresh tokens and improved session handling
-- Expand AI features: vector DB support, advanced retrieval-augmented generation
+- Add refresh tokens
+- Expand AI features
 - Deploy to cloud
