@@ -13,8 +13,11 @@ RUN /build/venv/bin/pip install --no-cache-dir -r requirements.txt
 # Stage 2: Runtime - minimal final image with non-root user
 FROM python:3.11-slim AS runtime
 
-# Create non-root group and user
-RUN groupadd --gid 1001 appgroup && \
+# Install curl for health checks and create non-root group and user
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends curl && \
+    rm -rf /var/lib/apt/lists/* && \
+    groupadd --gid 1001 appgroup && \
     useradd --uid 1001 --gid appgroup --no-create-home appuser
 
 WORKDIR /app
