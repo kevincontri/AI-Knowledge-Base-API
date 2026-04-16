@@ -19,6 +19,17 @@ This project demonstrates backend fundamentals with an applied AI layer:
 - Unit tests for functions of all layers and the API
 - AI integration for embeddings and semantic search
 
+## v2 — Docker & Infrastructure Updates
+
+- **Multi-stage Docker build** — dependencies are compiled in an isolated builder stage and only the final venv is copied into the lean runtime image, keeping the production image small
+- **Non-root container** — the API process runs as a dedicated `appuser` (UID 1001) instead of root, reducing the blast radius of any container escape
+- **Health checks on all services** — Docker now monitors the API (`/health`), PostgreSQL (`pg_isready`), and Ollama (`ollama list`) and will restart unhealthy containers automatically
+- **Automatic model provisioning** — `nomic-embed-text` and `phi3:mini` are pulled automatically when the Ollama container starts for the first time; subsequent startups use the cached volume and skip the download
+- **Persistent volumes** — Ollama models and PostgreSQL data survive container restarts via named Docker volumes (`ollama_data`, `postgres_data`)
+- **Internal networking** — Ollama is no longer exposed on a host port; all inter-service communication happens over Docker's internal network
+
+---
+
 ## Prerequisites
 
 - [Docker](https://www.docker.com/products/docker-desktop) and Docker Compose
@@ -87,24 +98,9 @@ This will:
 
 - Build and start the API on `http://localhost:8000`
 - Start a PostgreSQL instance with persistent storage
-- Start an Ollama instance on `http://localhost:11434`
+- Start an Ollama instance and automatically pull `nomic-embed-text` and `phi3:mini` (first run only — models are cached in a volume)
 
-3. Pull the required models (first time only)
-
-Open a new terminal and run:
-
-```
-docker exec -it ai_knowledge_base_api-ollama-1 ollama pull phi3:mini
-docker exec -it ai_knowledge_base_api-ollama-1 ollama pull nomic-embed-text
-```
-
-4. Open the interactive docs at `http://localhost:8000/docs`
-
-5. Start the app:
-
-```
-docker compose up
-```
+3. Open the interactive docs at `http://localhost:8000/docs`
 ---
 
 ### Option 2 — Local development (without Docker)

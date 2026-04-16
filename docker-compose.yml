@@ -2,6 +2,7 @@ name: ai_knowledge_base_api
 services:
   api:
     build: .
+    user: "1001:1001"
     ports:
       - "8000:8000"
     env_file:
@@ -10,8 +11,16 @@ services:
       - OLLAMA_URL=http://ollama:11434
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/project4
     depends_on:
-      - db
-      - ollama
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 20s
 
   db:
     image: postgres:16
@@ -21,13 +30,24 @@ services:
       - POSTGRES_DB=project4
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d project4"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
 
   ollama:
     image: ollama/ollama
-    ports:
-      - "11434:11434"
     volumes:
       - ollama_data:/root/.ollama
+    entrypoint: ["/bin/sh", "-c", "ollama serve & sleep 5 && ollama pull nomic-embed-text && ollama pull phi3:mini && wait"]
+    healthcheck:
+      test: ["CMD", "ollama", "list"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+      start_period: 60s
 
 volumes:
   ollama_data:
