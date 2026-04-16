@@ -22,9 +22,9 @@ This project demonstrates backend fundamentals with an applied AI layer:
 ## v2 — Docker & Infrastructure Updates
 
 - **Multi-stage Docker build** — dependencies are compiled in an isolated builder stage and only the final venv is copied into the lean runtime image, keeping the production image small
-- **Non-root container** — the API process runs as a dedicated `appuser` (UID 1001) instead of root, reducing the blast radius of any container escape
+- **Non-root container** — the API process runs as `appuser` (UID 1001) instead of root, reducing the risk of any container escape
 - **Health checks on all services** — Docker now monitors the API (`/health`), PostgreSQL (`pg_isready`), and Ollama (`ollama list`) and will restart unhealthy containers automatically
-- **Automatic model provisioning** — `nomic-embed-text` and `phi3:mini` are pulled automatically when the Ollama container starts for the first time; subsequent startups use the cached volume and skip the download
+- **Automatic model provisioning** — `nomic-embed-text` and `phi3:mini` are pulled automatically when the Ollama container starts for the first time; all subsequent startups use the cached volume and skip the download
 - **Persistent volumes** — Ollama models and PostgreSQL data survive container restarts via named Docker volumes (`ollama_data`, `postgres_data`)
 - **Internal networking** — Ollama is no longer exposed on a host port; all inter-service communication happens over Docker's internal network
 
