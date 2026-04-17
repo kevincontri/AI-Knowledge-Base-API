@@ -12,3 +12,5 @@ __pycache__/
 .idea/
 Dockerfile*
 docker-compose*
+conftest.py
+pytest.ini
